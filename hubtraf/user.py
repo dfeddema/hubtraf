@@ -50,6 +50,7 @@ class User:
 
         self.state = User.States.CLEAR
         self.notebook_url = self.hub_url / 'user' / self.username
+        print("self.notebook_url= ", self.notebook_url)
 
         self.log = logger.bind(
             username=username
@@ -100,6 +101,7 @@ class User:
         async def server_running():
             async with self.session.get(api_url / 'users' / self.username, headers=self.headers) as resp:
                 userinfo = await resp.json()
+              # userinfo = await resp.json(content_type=None)
                 server = userinfo.get('servers', {}).get('', {})
                 self.debug('server-start', phase='waiting', ready=server.get('ready'), pending=server.get('pending'))
                 return server.get('ready', False)
@@ -170,7 +172,7 @@ class User:
         return True
 
     async def stop_server(self):
-        assert self.state == User.States.SERVER_STARTED
+        #assert self.state == User.States.SERVER_STARTED
         self.debug('server-stop', phase='start')
         start_time = time.monotonic()
         try:
